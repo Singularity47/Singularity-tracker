@@ -45,12 +45,15 @@
     </div>
 </div>
 
-<script>
-    async function pay() {
-        const res = await fetch('/api/subscribe', {method: 'POST'});
-        const data = await res.json();
-        if(data.url) window.location.href = data.url; // Takes them to Stripe
-    }
-</script>
+document.getElementById('share-tw').onclick = function() {
+    const prox = document.getElementById('prox-text').innerText;
+    const text = encodeURIComponent(`The Singularity is approaching. Albuquerque Node 01 reports AGI Proximity at ${prox}! Track it live:`);
+    const url = encodeURIComponent(window.location.href);
+    
+    // Opens a small popup window for the user to tweet
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, 
+                'share-window', 'height=450,width=550');
+};
+    
 </body>
 </html>
