@@ -46,12 +46,18 @@
             <div class="card" onclick="showDetails('HARDWARE')"><h4>CHIP ALLOC</h4><p>HIGH</p></div>
         </div>
 
-        <div id="heat-map">
-            <div style="position:absolute; top:10px; left:10px; color:#00ff41; font-size:0.7em;">>> REGIONAL_SINGULARITY_HEAT_MAP [ALBUQUERQUE_GRID]</div>
-            <div class="map-marker" style="top: 180px; left: 60%;" title="Sandia National Labs"></div>
-            <div class="map-marker" style="top: 100px; left: 45%; background: #00ff41; box-shadow: 0 0 20px 5px #00ff41;" title="Downtown Tech Hub"></div>
-            <div style="position:absolute; bottom:10px; right:10px; color:#888; font-size:0.6em;">MAP_DATA: NM_TECH_ROADMAP_2026</div>
-        </div>
+        <div id="heat-map" style="background-image: radial-gradient(#004400 1px, transparent 1px); background-size: 20px 20px;">
+    <div style="position:absolute; top:10px; left:10px; color:#00ff41; font-size:0.7em; background:rgba(0,0,0,0.7);">>> ABQ_METRO_SURVEILLANCE</div>
+    
+    <div class="map-marker" style="top: 70%; left: 75%; background: #ff0000;" title="Sandia National Labs"></div>
+    <div style="position:absolute; top:72%; left:78%; font-size:0.5em; color:#ff0000;">SANDIA_INTEL</div>
+
+    <div class="map-marker" style="top: 45%; left: 40%; background: #00ff41;" title="UNM Tech Corridor"></div>
+    <div style="position:absolute; top:47%; left:43%; font-size:0.5em; color:#00ff41;">CENTRAL_HUB</div>
+
+    <div style="position:absolute; bottom:10px; right:10px; color:#555; font-size:0.6em;">NM_GEOSPATIAL_GRID_v4.2</div>
+</div>
+
 
         <div id="paywall-area" style="margin-top: 20px;">
             <div id="deep-dive" class="card locked" style="border-color: #ff0000;">
