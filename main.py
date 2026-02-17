@@ -1,3 +1,4 @@
+from fastapi.responses import HTMLResponse
 import os
 from fastapi import FastAPI
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
