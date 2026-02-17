@@ -31,19 +31,23 @@ class Metric(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
 
 # Build the database tables
-Base.metadata.create_all(bind=engine)@app.get("/api/tracker-logic")
+# Create the database tables
+Base.metadata.create_all(bind=engine)
+
+@app.get("/api/tracker-logic")
 def calculate_progress():
-    # This goes to the arXiv website and looks for 'Artificial Intelligence' papers
+    # This goes to the arXiv website and looks for AI research papers
     search = arxiv.Search(query="cat:cs.AI", max_results=50)
     paper_count = len(list(search.results()))
     
-    # We use the paper count to boost the 72% progress
-    # More research = closer to Singularity
+    # Calculate the boost to our base 72.4% progress
     base_progress = 72.4
     boost = paper_count / 500  
     total = round(base_progress + boost, 2)
     
     return {"proximity": total, "papers_found": paper_count}
+
+
 # --- 2. The API Endpoints (The 8-Power System) ---
 
 @app.get("/", response_class=HTMLResponse)
