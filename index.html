@@ -46,7 +46,40 @@
 
         <div id="log-window">Initializing Albuquerque Stream...</div>
     </div>
+<div id="metric-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #00ff41; padding:20px; z-index:1000; width:80%; max-width:500px; box-shadow: 0 0 30px #00ff41;">
+    <h3 id="modal-title" style="border-bottom: 1px solid #00ff41;">METRIC_DETAILS</h3>
+    <p id="modal-desc">Loading telemetry data...</p>
+    <button onclick="closeModal()" style="background:#00ff41; color:#000; border:none; padding:10px; cursor:pointer; font-weight:bold; width:100%;">CLOSE_TERMINAL</button>
+</div>
 
+<div class="card" onclick="showDetails('RESEARCH', 'Tracking live AI papers via arXiv API. Higher volume signals rapid theoretical breakthroughs.')" style="cursor:pointer;">
+    <h4>RESEARCH</h4><p id="res-val">SYNCING...</p>
+</div>
+
+<script>
+    // DATA DEFINITIONS FOR YOUR 8 CARDS
+    const cardData = {
+        'RESEARCH': 'Scanning arXiv API for "cat:cs.AI". Tracks theoretical breakthroughs and fluid intelligence benchmarks.',
+        'COMPUTE': 'Monitoring GitHub velocity and NVIDIA hardware allocation. Tracks the raw physical capacity for AGI training.',
+        'ENERGY': 'Tracking EIA data for gigawatt-scale data centers. AGI requires massive power scaling beyond current limits.',
+        'ADOPTION': 'Measuring Stripe transaction volume for AI services. Tracks the transition from AI tools to AI employees.',
+        'MODELS': 'Scanning Hugging Face for new frontier models. Tracks the "Generality Gap" between specialist and generalist AI.',
+        'SENTIMENT': 'Analyzing NewsAPI headlines. Measures public and professional trust in automated reasoning systems.',
+        'GOVERNANCE': 'Monitoring global policy frameworks. Tracks legal alignment and safety guardrails for autonomous systems.',
+        'HARDWARE': 'Tracking H100 and B200 chip shipping schedules. Physical bottlenecks are the primary speed limit for AGI.'
+    };
+
+    function showDetails(title, desc) {
+        document.getElementById('modal-title').innerText = title + "_DEEP_DIVE";
+        document.getElementById('modal-desc').innerText = cardData[title] || desc;
+        document.getElementById('metric-modal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('metric-modal').style.display = 'none';
+    }
+</script>
+    
     <div class="ticker-wrap"><div class="ticker" id="news-ticker">>> CONNECTING TO GLOBAL NEWS NODES...</div></div>
 
     <script>
