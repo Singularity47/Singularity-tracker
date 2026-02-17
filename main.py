@@ -3,70 +3,59 @@ import arxiv
 import requests
 import stripe
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 app = FastAPI()
 
 # --- 1. CONFIGURATION ---
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 NEWS_KEY = os.getenv("NEWS_API_KEY")
+BASE_URL = f"https://{os.getenv('RAILWAY_PUBLIC_DOMAIN')}" if os.getenv('RAILWAY_PUBLIC_DOMAIN') else "http://localhost:8000"
 
 @app.get("/api/tracker-logic")
-d@app.get("/api/tracker-logic")
 def calculate_progress():
     try:
-        # ... (Keep your existing math here) ...
-        total = round(71.0 + live_boost, 3)
+        search = arxiv.Search(query="cat:cs.AI", max_results=50)
+        res_count = len(list(search.results()))
         
-        # New: Pre-formatted text for Twitter/X sharing
-        share_text = f"The Singularity is approaching. Node 01 (ABQ) reports AGI Proximity at {total}%! Track the metrics here:"
+        headlines = ["Synchronizing Global Feed..."]
+        if NEWS_KEY:
+            url = f"https://newsapi.org/v2/everything?q=Artificial%20Intelligence&apiKey={NEWS_KEY}"
+            r = requests.get(url).json()
+            articles = r.get('articles', [])[:5]
+            if articles:
+                headlines = [a.get('title', 'Headline Unavailable') for a in articles]
+
+        # The Scientific AGI Math
+        base = 71.0
+        live_boost = ( (res_count/500)*0.3 + 0.65 ) * 10
+        total = round(base + live_boost, 3)
         
         return {
             "proximity": total,
             "headlines": headlines,
-            "share_msg": share_text,
+            "papers": res_count,
             "node": "Albuquerque Node 01"
         }
     except Exception as e:
-        return {"proximity": 72.4, "share_msg": "Tracking the Singularity...", "error": str(e)}
+        return {"proximity": 72.4, "headlines": ["Feed Offline"], "error": str(e)}
 
-# FIXED LINE: Changed @app.get with methods to @app.post
 @app.post("/api/subscribe")
 async def create_pay_session():
     try:
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
-            line_items=[{
-                'price_data': {
-                    'currency': 'usd',
-                    'product_data': {'name': 'ABQ Node Deep Dive Report'},
-                    'unit_amount': 500,
-                },
-                'quantity': 1,
-            }],
+            line_items=[{'price_data': {'currency': 'usd', 'product_data': {'name': 'ABQ Node Deep Dive'}, 'unit_amount': 500}, 'quantity': 1}],
             mode='payment',
-            success_url='https://' + os.getenv('RAILWAY_PUBLIC_DOMAIN', 'your-node.up.railway.app') + '/success',
-            cancel_url='https://' + os.getenv('RAILWAY_PUBLIC_DOMAIN', 'your-node.up.railway.app') + '/',
+            success_url=f"{BASE_URL}/?unlocked=true", # AUTO-UNLOCK TRIGGER
+            cancel_url=f"{BASE_URL}/",
         )
         return {"url": session.url}
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/success", response_class=HTMLResponse)
-def payment_success():
-    return """
-    <body style="background: #000; color: #00ff41; font-family: monospace; text-align: center; padding: 50px;">
-        <h1>[ ACCESS GRANTED ]</h1>
-        <p>DEEP DIVE MODULE ACTIVATED FOR ALBUQUERQUE_01</p>
-        <a href="/" style="color: #fff;">RETURN TO DASHBOARD</a>
-    </body>
-    """
-
 @app.get("/", response_class=HTMLResponse)
 def home():
-    try:
-        with open("index.html", "r") as f:
-            return f.read()
-    except:
-        return "<h1>Node Online</h1><p>Index.html missing. Check GitHub files.</p>"
+    with open("index.html", "r") as f:
+        return f.read()
         
