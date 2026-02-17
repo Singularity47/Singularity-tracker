@@ -2,97 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Singularity Tracker v3.0 | ABQ_NODE_01</title>
+    <title>Singularity Tracker v3.0 | ABQ_01</title>
     <style>
         body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; overflow-x: hidden; }
         .dashboard { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 25px #00ff41; max-width: 1100px; margin: auto; background: rgba(0,20,0,0.9); }
-        .header-box { border-bottom: 2px solid #00ff41; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 20px 0; }
-        .card { border: 1px solid #004400; padding: 10px; background: rgba(0, 255, 65, 0.03); position: relative; }
+        .card { border: 1px solid #004400; padding: 15px; background: rgba(0, 255, 65, 0.03); }
         .progress-bar { width: 100%; background: #111; height: 35px; border: 1px solid #00ff41; position: relative; }
-        .fill { background: #00ff41; height: 100%; width: 72%; transition: width 3s ease-in-out; box-shadow: 0 0 15px #00ff41; }
-        
-        /* LOG WINDOW STYLE */
-        .log-window { height: 100px; background: #050505; border: 1px solid #004400; padding: 10px; font-size: 0.75em; overflow-y: hidden; margin-top: 15px; color: #008822; }
-        
-        .ticker-wrap { background: #004400; color: #fff; padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; overflow: hidden; z-index: 100; }
+        .fill { background: #00ff41; height: 100%; width: 72%; transition: width 3s ease-in-out; }
+        .ticker-wrap { background: #004400; color: #fff; padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; overflow: hidden; }
         .ticker { white-space: nowrap; display: inline-block; animation: scroll 45s linear infinite; font-weight: bold; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        
-        .btn-unlock { background: #00ff41; color: #000; padding: 12px 25px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 0 10px #00ff41; width: 100%; margin-top: 15px; }
-        .btn-unlock:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+        .btn-unlock { background: #00ff41; color: #000; padding: 15px; font-weight: bold; border: none; cursor: pointer; width: 100%; margin-top: 15px; }
+        .locked { filter: blur(8px); pointer-events: none; opacity: 0.5; }
+        #log-window { height: 80px; background: #050505; border: 1px solid #004400; padding: 10px; font-size: 0.7em; overflow: hidden; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="dashboard">
-        <div class="header-box">
-            <div>
-                <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
-                <p>NODE_IDENTIFIER: ABQ_NM_USA_01</p>
-            </div>
-            <div style="text-align: right;">
-                <p>SINGULARITY_EST: <span id="countdown">Calculating...</span></p>
-                <p>TIME: <span id="local-time"></span></p>
-            </div>
-        </div>
+        <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
+        <p>NODE: ALBUQUERQUE_NM_01 | <span id="local-time"></span></p>
         
-        <div class="card" style="margin-bottom: 20px; border-width: 2px;">
-            <h2 style="margin-top:0;">TRUE PROXIMITY: <span id="prox-text">72.0%</span></h2>
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>TRUE PROXIMITY: <span id="prox-text">72.0%</span></h2>
             <div class="progress-bar"><div id="prox-fill" class="fill"></div></div>
         </div>
 
         <div class="grid">
             <div class="card"><h4>RESEARCH</h4><p id="res-val">SYNCING...</p></div>
-            <div class="card"><h4>COMPUTE</h4><p>SCALING_LVL: 8/10</p></div>
-            <div class="card"><h4>ECONOMY</h4><p>STRIPE_NODE: UP</p></div>
-            <div class="card"><h4>INFRA</h4><p>ABQ_GRID: 1.2GW</p></div>
-            <div class="card"><h4>MODELS</h4><p>HF_ENTRIES: 840k</p></div>
-            <div class="card"><h4>SENTIMENT</h4><p id="sent-val">NEUTRAL</p></div>
-            <div class="card"><h4>GOVERNANCE</h4><p>STABLE</p></div>
-            <div class="card"><h4>HARDWARE</h4><p>H200_ALLOC: HIGH</p></div>
+            <div class="card"><h4>COMPUTE</h4><p>8.4 EFLOPs</p></div>
+            <div class="card"><h4>ENERGY</h4><p>1.21 GW</p></div>
+            <div class="card"><h4>ADOPTION</h4><p>LEVEL: 4</p></div>
         </div>
 
-        <div class="card" style="border: 1px dashed #ff0000; border-radius: 5px;">
-            <h3 style="color: #ff0000; margin: 0;">[ CLASSIFIED: DEEP DIVE ACCESS ]</h3>
-            <p style="font-size: 0.85em; margin: 10px 0;">UNLOCK: RAW COMPUTE LOGS + REGIONAL ABQ TECH PREDICTIONS</p>
-            <button class="btn-unlock" onclick="pay()">UNLOCK MODULE 01 ($5)</button>
+        <div id="paywall-container">
+            <div id="deep-dive-module" class="card locked" style="border-color: #ff0000;">
+                <h3 style="color: #ff0000;">[ CLASSIFIED: DEEP DIVE INTELLIGENCE ]</h3>
+                <p>RAW COMPUTE LOGS: 14.2 Petaflops | PREDICTED AGI: Nov 2028</p>
+                <p>LOCAL ABQ IMPACT: SANDIA NODE EXPANSION DETECTED</p>
+            </div>
+            <button id="pay-button" class="btn-unlock" onclick="pay()">UNLOCK DEEP DIVE ($5)</button>
         </div>
 
-        <div class="log-window" id="log-feed">Initializing Albuquerque Node Data Stream...</div>
+        <div id="log-window">Initializing Albuquerque Stream...</div>
     </div>
 
-    <div class="ticker-wrap"><div class="ticker" id="news-ticker">>> ACCESSING GLOBAL NEWS SATELLITES...</div></div>
+    <div class="ticker-wrap"><div class="ticker" id="news-ticker">>> CONNECTING TO GLOBAL NEWS NODES...</div></div>
 
     <script>
-        // SYSTEM LOG ANIMATION
-        const logs = [
-            "SCANNING_ARXIV_DB...", "PARSING_AI_RESEARCH_PAPERS...", "UPDATING_COMPUTE_WEIGHTS...", 
-            "PINGING_STRIPE_GATEWAY...", "FETCHING_LOCAL_ABQ_SENTIMENT...", "NODE_ID_MATCHED: ABQ_01",
-            "ANALYZING_NEWS_SENTIMENT...", "CALCULATING_WEIGHTED_AVERAGE...", "SINGULARITY_PROXIMITY_UPDATED."
-        ];
-        let logIdx = 0;
-        function addLog() {
-            const feed = document.getElementById('log-feed');
-            feed.innerHTML += `<br>> [${new Date().toLocaleTimeString()}] ${logs[logIdx % logs.length]}`;
-            logIdx++;
-            if (feed.scrollHeight > 100) feed.scrollTop = feed.scrollHeight;
+        // AUTO-UNLOCK CHECK
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('unlocked') === 'true') {
+            document.getElementById('deep-dive-module').classList.remove('locked');
+            document.getElementById('deep-dive-module').style.borderColor = '#00ff41';
+            document.getElementById('pay-button').style.display = 'none';
         }
-        setInterval(addLog, 2500);
 
-        // DATA SYNC
         async function sync() {
-            try {
-                const res = await fetch('/api/tracker-logic');
-                const data = await res.json();
-                document.getElementById('prox-text').innerText = data.proximity + "%";
-                document.getElementById('prox-fill').style.width = data.proximity + "%";
-                document.getElementById('res-val').innerText = data.papers + " PAPERS (24H)";
-                document.getElementById('news-ticker').innerText = " >> " + data.headlines.join(" | ");
-                
-                // Countdown Logic (Est AGI at 100%)
-                const monthsLeft = Math.round((100 - data.proximity) * 2.5);
-                document.getElementById('countdown').innerText = `~${monthsLeft} MONTHS`;
-            } catch (e) { console.log("Sync error"); }
+            const res = await fetch('/api/tracker-logic');
+            const data = await res.json();
+            document.getElementById('prox-text').innerText = data.proximity + "%";
+            document.getElementById('prox-fill').style.width = data.proximity + "%";
+            document.getElementById('res-val').innerText = data.papers + " PAPERS";
+            document.getElementById('news-ticker').innerText = " >> " + data.headlines.join(" | ");
         }
 
         async function pay() {
@@ -102,8 +74,7 @@
         }
 
         setInterval(() => { document.getElementById('local-time').innerText = new Date().toLocaleTimeString(); }, 1000);
-        setInterval(sync, 15000);
-        sync();
+        setInterval(sync, 10000); sync();
     </script>
 </body>
 </html>
