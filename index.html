@@ -17,35 +17,33 @@
 </head>
 <body>
     <div class="dashboard">
-        <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
-        <p>NODE_ID: ALBUQUERQUE_01</p>
-        
-        <div class="card">
-            <h2>TRUE PROXIMITY: <span id="prox-text">72.0%</span></h2>
-            <div class="progress-bar"><div id="prox-fill" class="fill"></div></div>
-        </div>
-
-        <div class="grid">
-            <div class="card"><h4>RESEARCH (arXiv)</h4><p id="paper-val">0 PAPERS</p></div>
-            <div class="card"><h4>DEVELOPMENT</h4><p>VELOCITY: HIGH</p></div>
-            <div class="card"><h4>ECONOMY</h4><p>ADOPTION: +2.4%</p></div>
-            <div class="card"><h4>COMPUTE</h4><p>GRID LOAD: 1.2GW</p></div>
-        </div>
+    <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
+    <p>NODE_ID: ALBUQUERQUE_01</p>
+    
+    <div class="card">
+        <h2>TRUE PROXIMITY: <span id="prox-text">72.0%</span></h2>
+        <div class="progress-bar"><div id="prox-fill" class="fill"></div></div>
     </div>
-    <div class="ticker-wrap"><div class="ticker" id="news-ticker">>> INITIALIZING LIVE DATA STREAM FROM NEWS_API...</div></div>
 
-    <script>
-        async function sync() {
-            try {
-                const res = await fetch('/api/tracker-logic');
-                const data = await res.json();
-                document.getElementById('prox-text').innerText = data.proximity + "%";
-                document.getElementById('prox-fill').style.width = data.proximity + "%";
-                document.getElementById('paper-val').innerText = data.papers + " PAPERS (24H)";
-                document.getElementById('news-ticker').innerText = " >> " + data.headlines.join(" | ");
-            } catch (e) { console.log("Sync error"); }
-        }
-        setInterval(sync, 10000); sync();
-    </script>
+    <div id="deep-dive" style="filter: blur(5px); pointer-events: none; border: 2px dashed #ff0000; padding: 10px; margin-top: 20px;">
+        <h3>[ CLASSIFIED: DEEP DIVE DATA ]</h3>
+        <p>RAW COMPUTE LOGS: 14.2 Petaflops</p>
+        <p>AGI PREDICTION: Q4 2029</p>
+    </div>
+
+    <div id="paywall" style="text-align: center; margin-top: -60px; position: relative; z-index: 10;">
+        <button onclick="pay()" style="background: #00ff41; color: #000; padding: 15px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 0 15px #00ff41;">
+            UNLOCK DEEP DIVE DATA ($5)
+        </button>
+    </div>
+</div>
+
+<script>
+    async function pay() {
+        const res = await fetch('/api/subscribe', {method: 'POST'});
+        const data = await res.json();
+        if(data.url) window.location.href = data.url; // Takes them to Stripe
+    }
+</script>
 </body>
 </html>
