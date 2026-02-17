@@ -33,13 +33,11 @@ Base.metadata.create_all(bind=engine)
 
 # --- 2. The API Endpoints (The 8-Power System) ---
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def home():
-    return {
-        "status": "Singularity Tracker Online", 
-        "version": "2.0",
-        "database": "Connected & Recording"
-    }
+    with open("index.html", "r") as f:
+        return f.read()
+
 
 @app.get("/api/github-activity")
 def github_status():
