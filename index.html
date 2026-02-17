@@ -98,21 +98,37 @@
         function closeM() { document.getElementById('modal').style.display = 'none'; }
 
         async function sync() {
-            try {
-                const res = await fetch('/api/tracker-logic');
-                const data = await res.json();
-                document.getElementById('prox-text').innerText = data.proximity + "%";
-                document.getElementById('prox-fill').style.width = data.proximity + "%";
-                document.getElementById('res-val').innerText = data.papers + " PAPERS";
-                document.getElementById('news-ticker').innerText = " >> " + data.headlines.join(" | ");
-                
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('unlocked') === 'true') {
-                    document.getElementById('deep-dive').classList.remove('locked');
-                    document.getElementById('pay-btn').style.display = 'none';
-                }
-            } catch (e) { console.log("Sync Error"); }
+    try {
+        const res = await fetch('/api/tracker-logic');
+        const data = await res.json();
+        
+        // Updates the main bar
+        document.getElementById('prox-text').innerText = data.proximity + "%";
+        document.getElementById('prox-fill').style.width = data.proximity + "%";
+        
+        // NEW: Updates the Live Research card
+        document.getElementById('res-val').innerText = data.papers + " PAPERS (24H)";
+        
+        // NEW: Updates Energy & Housing with live math
+        // We'll target the cards by their order or add specific IDs
+        const cards = document.querySelectorAll('.card p');
+        cards[1].innerText = data.energy;   // Updates Energy GW
+        cards[2].innerText = data.housing;  // Updates ABQ Housing %
+        
+        // Updates the scrolling news ticker
+        document.getElementById('news-ticker').innerText = " >> " + data.headlines.join(" | ");
+        
+        // Auto-Unlock Check
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('unlocked') === 'true') {
+            document.getElementById('deep-dive').classList.remove('locked');
+            document.getElementById('pay-btn').style.display = 'none';
         }
+    } catch (e) { 
+        console.log("Telemetry Sync Error", e); 
+    }
+}
+
         async function pay() {
             const res = await fetch('/api/subscribe', {method: 'POST'});
             const data = await res.json();
