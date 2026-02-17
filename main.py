@@ -1,3 +1,5 @@
+import arxiv
+import requests
 from fastapi.responses import HTMLResponse
 import os
 from fastapi import FastAPI
