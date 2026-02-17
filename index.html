@@ -1,22 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Singularity Tracker v2.0</title>
-    <style>
-        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; overflow: hidden; }
-        .dashboard { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px #00ff41; max-width: 900px; margin: auto; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .card { border: 1px solid #004400; padding: 15px; background: rgba(0, 255, 65, 0.05); }
-        .progress-bar { width: 100%; background: #111; height: 30px; border: 1px solid #00ff41; }
-        .fill { background: #00ff41; height: 100%; width: 72%; transition: width 2s; box-shadow: 0 0 10px #00ff41; }
-        .ticker-wrap { background: #004400; color: #fff; padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; overflow: hidden; }
-        .ticker { white-space: nowrap; display: inline-block; animation: scroll 40s linear infinite; }
-        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-    </style>
-</head>
-<body>
-    <div class="dashboard">
+<div class="dashboard">
     <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
     <p>NODE_ID: ALBUQUERQUE_01</p>
     
@@ -24,36 +6,23 @@
         <h2>TRUE PROXIMITY: <span id="prox-text">72.0%</span></h2>
         <div class="progress-bar"><div id="prox-fill" class="fill"></div></div>
     </div>
-<div class="card" style="border-color: #1DA1F2; margin-top: 20px; text-align: center;">
-    <h4>BROADCAST NODE STATUS</h4>
-    <p>Share this live prediction with your network:</p>
-    <button id="share-tw" class="btn-unlock" style="background: #1DA1F2; color: #fff; width: auto; padding: 10px 20px;">
-        SHARE ON X (TWITTER)
-    </button>
-</div>
-        
-    <div id="deep-dive" style="filter: blur(5px); pointer-events: none; border: 2px dashed #ff0000; padding: 10px; margin-top: 20px;">
-        <h3>[ CLASSIFIED: DEEP DIVE DATA ]</h3>
-        <p>RAW COMPUTE LOGS: 14.2 Petaflops</p>
-        <p>AGI PREDICTION: Q4 2029</p>
+
+    <div class="grid">
+        <div class="card"><h4>RESEARCH</h4><p id="res-val">SCANNING...</p></div>
+        <div class="card"><h4>COMPUTE</h4><p>GITHUB: HIGH</p></div>
+        <div class="card"><h4>ADOPTION</h4><p>STRIPE: ACTIVE</p></div>
+        <div class="card"><h4>ENERGY</h4><p>GRID: 1.2GW</p></div>
+        <div class="card"><h4>MODELS</h4><p>HF: 840k+</p></div>
+        <div class="card"><h4>SENTIMENT</h4><p>POSITIVE</p></div>
+        <div class="card"><h4>LEGAL</h4><p>STABLE</p></div>
+        <div class="card"><h4>HARDWARE</h4><p>H100: SHIPING</p></div>
     </div>
 
-    <div id="paywall" style="text-align: center; margin-top: -60px; position: relative; z-index: 10;">
-        <button onclick="pay()" style="background: #00ff41; color: #000; padding: 15px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 0 15px #00ff41;">
-            UNLOCK DEEP DIVE DATA ($5)
-        </button>
+    <div class="card" style="border: 1px dashed #ff0000; background: rgba(255,0,0,0.05);">
+        <h3>[ CLASSIFIED: DEEP DIVE INTELLIGENCE ]</h3>
+        <p style="font-size: 0.8em; color: #888;">UNLOCKING PROVIDES: RAW COMPUTE LOGS, PREDICTIVE ARRIVAL DATES, AND LOCAL ABQ TECH IMPACT REPORTS.</p>
+        <button class="btn-unlock" onclick="pay()">UNLOCK MODULE ($5)</button>
     </div>
 </div>
 
-document.getElementById('share-tw').onclick = function() {
-    const prox = document.getElementById('prox-text').innerText;
-    const text = encodeURIComponent(`The Singularity is approaching. Albuquerque Node 01 reports AGI Proximity at ${prox}! Track it live:`);
-    const url = encodeURIComponent(window.location.href);
-    
-    // Opens a small popup window for the user to tweet
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, 
-                'share-window', 'height=450,width=550');
-};
-    
-</body>
-</html>
+<div class="ticker-wrap"><div class="ticker" id="news-ticker">>> INITIALIZING LIVE DATA STREAM...</div></div>
