@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Singularity Tracker v2.0</title>
+    <style>
+        body { background: #0a0a0a; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; }
+        .dashboard { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px #00ff41; }
+        .metric { margin-bottom: 20px; }
+        .progress-bar { width: 100%; background: #1a1a1a; height: 25px; border: 1px solid #00ff41; position: relative; }
+        .fill { background: #00ff41; height: 100%; width: 72%; transition: width 2s; }
+        .status-light { color: #00ff41; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
+        <p>LOCATION: ALBUQUERQUE_NODE_01</p>
+        <hr color="#00ff41">
+        
+        <div class="metric">
+            <h3>AGI PROXIMITY: <span id="percent">72.4%</span></h3>
+            <div class="progress-bar"><div class="fill"></div></div>
+        </div>
+
+        <div class="metric">
+            <p>DATABASE: <span class="status-light">CONNECTED</span></p>
+            <p>ACTIVE NODES: EIA, GITHUB, ARXIV, NEWS_API</p>
+        </div>
+        
+        <div id="news-ticker">>> LOADING RECENT RESEARCH DATA...</div>
+    </div>
+</body>
+</html>
