@@ -51,3 +51,13 @@ def home():
     except:
         return "<h1>Node Online</h1><p>Index.html missing.</p>"
         
+@app.get("/success")
+def success():
+    return HTMLResponse(content="""
+        <body style="background: #000; color: #00ff41; font-family: monospace; text-align: center; padding: 50px;">
+            <h1>PAYMENT VERIFIED</h1>
+            <p>ACCESS GRANTED TO NODE_01_DEEP_DIVE</p>
+            <a href="/" style="color: #fff;">RETURN TO DASHBOARD</a>
+        </body>
+    """)
+    
