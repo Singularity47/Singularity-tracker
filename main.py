@@ -3,7 +3,7 @@ import arxiv
 import requests
 import stripe
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
@@ -12,7 +12,7 @@ stripe.api_key = os.getenv("STRIPE_API_KEY")
 NEWS_KEY = os.getenv("NEWS_API_KEY")
 BASE_URL = f"https://{os.getenv('RAILWAY_PUBLIC_DOMAIN')}" if os.getenv('RAILWAY_PUBLIC_DOMAIN') else "http://localhost:8000"
 
-@@app.get("/api/tracker-logic")
+@app.get("/api/tracker-logic")
 def calculate_progress():
     try:
         # 1. LIVE RESEARCH (arXiv)
@@ -20,12 +20,12 @@ def calculate_progress():
         papers = list(search.results())
         paper_count = len(papers)
         
-        # 2. CALCULATING LIVE METRICS
-        # Instead of static 1.21, we tie energy to research volume
-        energy_draw = round(1.15 + (paper_count * 0.002), 2)
-        housing_index = round(4.2 + (paper_count * 0.01), 1)
-        
-        # 3. NEWS FEED (Pulling from your Railway Variable)
+        # 2. REAL MATH FOR CARDS
+        # Ties the '1.21 GW' and '4.2%' to the actual research volume
+        live_energy = round(1.10 + (paper_count * 0.005), 2)
+        live_housing = round(4.0 + (paper_count * 0.02), 1)
+
+        # 3. NEWS FEED
         headlines = ["Scanning Albuquerque Data Streams..."]
         if NEWS_KEY:
             url = f"https://newsapi.org/v2/everything?q=Artificial%20Intelligence&apiKey={NEWS_KEY}"
@@ -42,8 +42,8 @@ def calculate_progress():
             "proximity": total,
             "headlines": headlines,
             "papers": paper_count,
-            "energy": f"{energy_draw} GW",
-            "housing": f"+{housing_index}%",
+            "energy": f"{live_energy} GW",
+            "housing": f"+{live_housing}%",
             "node": "Albuquerque Node 01"
         }
     except Exception as e:
@@ -56,7 +56,7 @@ async def create_pay_session():
             payment_method_types=['card'],
             line_items=[{'price_data': {'currency': 'usd', 'product_data': {'name': 'ABQ Node Deep Dive'}, 'unit_amount': 500}, 'quantity': 1}],
             mode='payment',
-            success_url=f"{BASE_URL}/?unlocked=true", # AUTO-UNLOCK TRIGGER
+            success_url=f"{BASE_URL}/?unlocked=true",
             cancel_url=f"{BASE_URL}/",
         )
         return {"url": session.url}
