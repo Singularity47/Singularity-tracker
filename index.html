@@ -2,110 +2,116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Singularity Tracker v3.0 | ABQ_01</title>
+    <title>Singularity Tracker v4.0 | ABQ_INTEL_NODE</title>
     <style>
         body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; overflow-x: hidden; }
-        .dashboard { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 25px #00ff41; max-width: 1100px; margin: auto; background: rgba(0,20,0,0.9); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 20px 0; }
-        .card { border: 1px solid #004400; padding: 15px; background: rgba(0, 255, 65, 0.03); }
-        .progress-bar { width: 100%; background: #111; height: 35px; border: 1px solid #00ff41; position: relative; }
-        .fill { background: #00ff41; height: 100%; width: 72%; transition: width 3s ease-in-out; }
-        .ticker-wrap { background: #004400; color: #fff; padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; overflow: hidden; }
-        .ticker { white-space: nowrap; display: inline-block; animation: scroll 45s linear infinite; font-weight: bold; }
+        .dashboard { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 25px #00ff41; max-width: 1100px; margin: auto; background: rgba(0,20,0,0.95); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 20px 0; }
+        .card { border: 1px solid #004400; padding: 15px; background: rgba(0, 255, 65, 0.05); cursor: pointer; transition: 0.3s; }
+        .card:hover { background: rgba(0, 255, 65, 0.15); border-color: #00ff41; }
+        .progress-bar { width: 100%; background: #111; height: 35px; border: 1px solid #00ff41; margin-bottom: 20px; }
+        .fill { background: #00ff41; height: 100%; width: 72%; transition: width 3s ease-in-out; box-shadow: 0 0 15px #00ff41; }
+        
+        /* HEAT MAP STYLING */
+        #heat-map { height: 300px; width: 100%; border: 1px solid #004400; position: relative; background: #050505; overflow: hidden; margin-top: 20px; }
+        .map-marker { position: absolute; width: 15px; height: 15px; background: #ff0000; border-radius: 50%; box-shadow: 0 0 20px 5px #ff0000; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #00ff41; padding:25px; z-index:1000; width:90%; max-width:500px; box-shadow: 0 0 40px #00ff41; }
+        .ticker-wrap { background: #004400; color: #fff; padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; overflow: hidden; z-index: 100; }
+        .ticker { white-space: nowrap; display: inline-block; animation: scroll 40s linear infinite; font-weight: bold; }
         @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        .btn-unlock { background: #00ff41; color: #000; padding: 15px; font-weight: bold; border: none; cursor: pointer; width: 100%; margin-top: 15px; }
+        .btn-unlock { background: #00ff41; color: #000; padding: 15px; font-weight: bold; border: none; cursor: pointer; width: 100%; margin-top: 20px; box-shadow: 0 0 10px #00ff41; }
         .locked { filter: blur(8px); pointer-events: none; opacity: 0.5; }
-        #log-window { height: 80px; background: #050505; border: 1px solid #004400; padding: 10px; font-size: 0.7em; overflow: hidden; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="dashboard">
         <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
-        <p>NODE: ALBUQUERQUE_NM_01 | <span id="local-time"></span></p>
+        <p>NODE: ALBUQUERQUE_NM_USA_01 | <span id="local-time"></span></p>
         
-        <div class="card" style="margin-bottom: 20px;">
+        <div class="card" style="border-width: 2px;">
             <h2>TRUE PROXIMITY: <span id="prox-text">72.0%</span></h2>
             <div class="progress-bar"><div id="prox-fill" class="fill"></div></div>
         </div>
 
         <div class="grid">
-            <div class="card"><h4>RESEARCH</h4><p id="res-val">SYNCING...</p></div>
-            <div class="card"><h4>COMPUTE</h4><p>8.4 EFLOPs</p></div>
-            <div class="card"><h4>ENERGY</h4><p>1.21 GW</p></div>
-            <div class="card"><h4>ADOPTION</h4><p>LEVEL: 4</p></div>
+            <div class="card" onclick="showDetails('RESEARCH')"><h4>RESEARCH</h4><p id="res-val">SYNCING...</p></div>
+            <div class="card" onclick="showDetails('COMPUTE')"><h4>COMPUTE</h4><p>8.4 EFLOPs</p></div>
+            <div class="card" onclick="showDetails('REAL ESTATE')"><h4>ABQ HOUSING</h4><p>+4.2% GROWTH</p></div>
+            <div class="card" onclick="showDetails('ENERGY')"><h4>ABQ INFRA</h4><p>1.21 GW</p></div>
+            <div class="card" onclick="showDetails('ADOPTION')"><h4>ECONOMY</h4><p>LEVEL: 4</p></div>
+            <div class="card" onclick="showDetails('SENTIMENT')"><h4>SENTIMENT</h4><p>POSITIVE</p></div>
+            <div class="card" onclick="showDetails('GOVERNANCE')"><h4>POLICY</h4><p>STABLE</p></div>
+            <div class="card" onclick="showDetails('HARDWARE')"><h4>CHIP ALLOC</h4><p>HIGH</p></div>
         </div>
 
-        <div id="paywall-container">
-            <div id="deep-dive-module" class="card locked" style="border-color: #ff0000;">
+        <div id="heat-map">
+            <div style="position:absolute; top:10px; left:10px; color:#00ff41; font-size:0.7em;">>> REGIONAL_SINGULARITY_HEAT_MAP [ALBUQUERQUE_GRID]</div>
+            <div class="map-marker" style="top: 180px; left: 60%;" title="Sandia National Labs"></div>
+            <div class="map-marker" style="top: 100px; left: 45%; background: #00ff41; box-shadow: 0 0 20px 5px #00ff41;" title="Downtown Tech Hub"></div>
+            <div style="position:absolute; bottom:10px; right:10px; color:#888; font-size:0.6em;">MAP_DATA: NM_TECH_ROADMAP_2026</div>
+        </div>
+
+        <div id="paywall-area" style="margin-top: 20px;">
+            <div id="deep-dive" class="card locked" style="border-color: #ff0000;">
                 <h3 style="color: #ff0000;">[ CLASSIFIED: DEEP DIVE INTELLIGENCE ]</h3>
-                <p>RAW COMPUTE LOGS: 14.2 Petaflops | PREDICTED AGI: Nov 2028</p>
-                <p>LOCAL ABQ IMPACT: SANDIA NODE EXPANSION DETECTED</p>
+                <p>> RAW COMPUTE LOGS: 14.2 Petaflops | PREDICTED AGI: Nov 2028</p>
+                <p>> ABQ IMPACT: SANDIA NODE EXPANSION DETECTED</p>
+                <p>> REALTY ANALYSIS: HIGH VALUE DETECTED NEAR DATA CORRIDOR</p>
             </div>
-            <button id="pay-button" class="btn-unlock" onclick="pay()">UNLOCK DEEP DIVE ($5)</button>
+            <button id="pay-btn" class="btn-unlock" onclick="pay()">UNLOCK DEEP DIVE MODULE ($5)</button>
         </div>
-
-        <div id="log-window">Initializing Albuquerque Stream...</div>
     </div>
-<div id="metric-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#000; border:2px solid #00ff41; padding:20px; z-index:1000; width:80%; max-width:500px; box-shadow: 0 0 30px #00ff41;">
-    <h3 id="modal-title" style="border-bottom: 1px solid #00ff41;">METRIC_DETAILS</h3>
-    <p id="modal-desc">Loading telemetry data...</p>
-    <button onclick="closeModal()" style="background:#00ff41; color:#000; border:none; padding:10px; cursor:pointer; font-weight:bold; width:100%;">CLOSE_TERMINAL</button>
-</div>
 
-<div class="card" onclick="showDetails('RESEARCH', 'Tracking live AI papers via arXiv API. Higher volume signals rapid theoretical breakthroughs.')" style="cursor:pointer;">
-    <h4>RESEARCH</h4><p id="res-val">SYNCING...</p>
-</div>
+    <div id="modal" class="modal">
+        <h3 id="m-title"></h3>
+        <p id="m-desc"></p>
+        <button onclick="closeM()" class="btn-unlock" style="margin-top:10px;">ACKNOWLEDGE</button>
+    </div>
 
-<script>
-    // DATA DEFINITIONS FOR YOUR 8 CARDS
-    const cardData = {
-        'RESEARCH': 'Scanning arXiv API for "cat:cs.AI". Tracks theoretical breakthroughs and fluid intelligence benchmarks.',
-        'COMPUTE': 'Monitoring GitHub velocity and NVIDIA hardware allocation. Tracks the raw physical capacity for AGI training.',
-        'ENERGY': 'Tracking EIA data for gigawatt-scale data centers. AGI requires massive power scaling beyond current limits.',
-        'ADOPTION': 'Measuring Stripe transaction volume for AI services. Tracks the transition from AI tools to AI employees.',
-        'MODELS': 'Scanning Hugging Face for new frontier models. Tracks the "Generality Gap" between specialist and generalist AI.',
-        'SENTIMENT': 'Analyzing NewsAPI headlines. Measures public and professional trust in automated reasoning systems.',
-        'GOVERNANCE': 'Monitoring global policy frameworks. Tracks legal alignment and safety guardrails for autonomous systems.',
-        'HARDWARE': 'Tracking H100 and B200 chip shipping schedules. Physical bottlenecks are the primary speed limit for AGI.'
-    };
-
-    function showDetails(title, desc) {
-        document.getElementById('modal-title').innerText = title + "_DEEP_DIVE";
-        document.getElementById('modal-desc').innerText = cardData[title] || desc;
-        document.getElementById('metric-modal').style.display = 'block';
-    }
-
-    function closeModal() {
-        document.getElementById('metric-modal').style.display = 'none';
-    }
-</script>
-    
-    <div class="ticker-wrap"><div class="ticker" id="news-ticker">>> CONNECTING TO GLOBAL NEWS NODES...</div></div>
+    <div class="ticker-wrap"><div class="ticker" id="news-ticker">>> SCANNING GLOBAL NEWS SATELLITES...</div></div>
 
     <script>
-        // AUTO-UNLOCK CHECK
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('unlocked') === 'true') {
-            document.getElementById('deep-dive-module').classList.remove('locked');
-            document.getElementById('deep-dive-module').style.borderColor = '#00ff41';
-            document.getElementById('pay-button').style.display = 'none';
+        const details = {
+            'RESEARCH': 'Scanning arXiv AI database. Tracking breakthroughs in fluid reasoning and cognitive architecture.',
+            'COMPUTE': 'Monitoring GitHub code velocity and NVIDIA H100 GPU allocation for frontier model training.',
+            'REAL ESTATE': 'Tracking Albuquerque property value shifts. AI expansion (data centers/Sandia Labs) is driving localized real estate premiums.',
+            'ENERGY': 'Monitoring PNM (Public Service Company of NM) grid load. High AI proximity requires gigawatt-scale power infrastructure.',
+            'ADOPTION': 'Measuring Stripe transaction volume for AI services. Tracking the move from AI-as-a-tool to AI-as-an-employee.',
+            'SENTIMENT': 'Analyzing NewsAPI for AI-related headlines. Measuring professional and public trust levels.',
+            'GOVERNANCE': 'Monitoring global policy frameworks and New Mexico-specific AI governance updates.',
+            'HARDWARE': 'Monitoring global chip supply chain. Bottlenecks in H200/B200 shipping act as the physical speed limit of AGI.'
+        };
+
+        function showDetails(m) {
+            document.getElementById('m-title').innerText = m + "_TELEMETRY";
+            document.getElementById('m-desc').innerText = details[m];
+            document.getElementById('modal').style.display = 'block';
         }
+        function closeM() { document.getElementById('modal').style.display = 'none'; }
 
         async function sync() {
-            const res = await fetch('/api/tracker-logic');
-            const data = await res.json();
-            document.getElementById('prox-text').innerText = data.proximity + "%";
-            document.getElementById('prox-fill').style.width = data.proximity + "%";
-            document.getElementById('res-val').innerText = data.papers + " PAPERS";
-            document.getElementById('news-ticker').innerText = " >> " + data.headlines.join(" | ");
+            try {
+                const res = await fetch('/api/tracker-logic');
+                const data = await res.json();
+                document.getElementById('prox-text').innerText = data.proximity + "%";
+                document.getElementById('prox-fill').style.width = data.proximity + "%";
+                document.getElementById('res-val').innerText = data.papers + " PAPERS";
+                document.getElementById('news-ticker').innerText = " >> " + data.headlines.join(" | ");
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('unlocked') === 'true') {
+                    document.getElementById('deep-dive').classList.remove('locked');
+                    document.getElementById('pay-btn').style.display = 'none';
+                }
+            } catch (e) { console.log("Sync Error"); }
         }
-
         async function pay() {
             const res = await fetch('/api/subscribe', {method: 'POST'});
             const data = await res.json();
             if(data.url) window.location.href = data.url;
         }
-
         setInterval(() => { document.getElementById('local-time').innerText = new Date().toLocaleTimeString(); }, 1000);
         setInterval(sync, 10000); sync();
     </script>
