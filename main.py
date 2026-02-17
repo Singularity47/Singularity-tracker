@@ -12,43 +12,23 @@ stripe.api_key = os.getenv("STRIPE_API_KEY")
 NEWS_KEY = os.getenv("NEWS_API_KEY")
 
 @app.get("/api/tracker-logic")
+d@app.get("/api/tracker-logic")
 def calculate_progress():
     try:
-        # A. RESEARCH (30% Weight) - Fluid Intelligence
-        search = arxiv.Search(query="cat:cs.AI", max_results=50)
-        res_count = len(list(search.results()))
-        res_score = (res_count / 500) * 0.30
-
-        # B. NEWS & SENTIMENT (10% Weight)
-        headlines = ["Synchronizing Global Feed..."]
-        news_score = 0.05
-        if NEWS_KEY:
-            url = f"https://newsapi.org/v2/everything?q=Artificial%20Intelligence&apiKey={NEWS_KEY}"
-            r = requests.get(url).json()
-            articles = r.get('articles', [])[:5]
-            if articles:
-                headlines = [a.get('title', 'Headline Unavailable') for a in articles]
-                news_score = 0.08 
-
-        # C. COMPUTE, ECONOMY, INFRA (60% Weight)
-        compute_val = 0.22  # Tracking hardware scaling
-        econ_val = 0.18     # Tracking AI-to-GDP contribution
-        infra_val = 0.20    # Tracking power grid capacity
-
-        # THE SCIENTIFIC COMPOSITE CALCULATION
-        base = 71.0
-        live_boost = (res_score + news_score + compute_val + econ_val + infra_val) * 10
-        total = round(base + live_boost, 3)
+        # ... (Keep your existing math here) ...
+        total = round(71.0 + live_boost, 3)
+        
+        # New: Pre-formatted text for Twitter/X sharing
+        share_text = f"The Singularity is approaching. Node 01 (ABQ) reports AGI Proximity at {total}%! Track the metrics here:"
         
         return {
             "proximity": total,
             "headlines": headlines,
-            "papers": res_count,
-            "status": "Level 1: Emerging AGI",
+            "share_msg": share_text,
             "node": "Albuquerque Node 01"
         }
     except Exception as e:
-        return {"proximity": 72.4, "headlines": ["Feed Offline"], "error": str(e)}
+        return {"proximity": 72.4, "share_msg": "Tracking the Singularity...", "error": str(e)}
 
 # FIXED LINE: Changed @app.get with methods to @app.post
 @app.post("/api/subscribe")
