@@ -1,18 +1,51 @@
-<div class="grid">
-    <div class="card">
-        <h4>RESEARCH (arXiv)</h4>
-        <p id="res-val">SYNCING...</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Singularity Tracker v2.0</title>
+    <style>
+        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; overflow-x: hidden; }
+        .dashboard { border: 2px solid #00ff41; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px #00ff41; max-width: 1000px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
+        .card { border: 1px solid #004400; padding: 15px; background: rgba(0, 255, 65, 0.05); }
+        .progress-bar { width: 100%; background: #111; height: 30px; border: 1px solid #00ff41; margin: 10px 0; }
+        .fill { background: #00ff41; height: 100%; width: 72%; transition: width 2s ease-in-out; box-shadow: 0 0 10px #00ff41; }
+        .ticker-wrap { background: #004400; color: #fff; padding: 10px; position: fixed; bottom: 0; left: 0; width: 100%; }
+        .ticker { white-space: nowrap; animation: scroll 30s linear infinite; font-weight: bold; }
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1>[ SYSTEM_STATUS: ONLINE ]</h1>
+        <p>ACTIVE_NODE: ALBUQUERQUE_01</p>
+        
+        <div class="card">
+            <h2>TRUE PROXIMITY: <span id="prox-text">72.0%</span></h2>
+            <div class="progress-bar"><div id="prox-fill" class="fill"></div></div>
+        </div>
+
+        <div class="grid">
+            <div class="card"><h4>RESEARCH (arXiv)</h4><p id="res-status">SCANNING...</p></div>
+            <div class="card"><h4>ECONOMY (Stripe)</h4><p>ADOPTION: STEADY</p></div>
+            <div class="card"><h4>COMPUTE (GitHub)</h4><p>VELOCITY: HIGH</p></div>
+            <div class="card"><h4>INFRA (EIA)</h4><p>LOAD: 1.2 GW</p></div>
+        </div>
     </div>
-    <div class="card">
-        <h4>DEV VELOCITY (GitHub)</h4>
-        <p id="dev-val">HIGH ACTIVITY</p>
-    </div>
-    <div class="card">
-        <h4>ENERGY DRAW (EIA)</h4>
-        <p>GRID LOAD: 1.21 GW</p>
-    </div>
-    <div class="card">
-        <h4>MARKET CAP (Stripe)</h4>
-        <p>AI ADOPTION: RISING</p>
-    </div>
-</div>
+
+    <div class="ticker-wrap"><div class="ticker" id="news-ticker">>> LOADING LIVE SINGULARITY NEWS FEED...</div></div>
+
+    <script>
+        async function sync() {
+            try {
+                const res = await fetch('/api/tracker-logic');
+                const data = await res.json();
+                document.getElementById('prox-text').innerText = data.proximity + "%";
+                document.getElementById('prox-fill').style.width = data.proximity + "%";
+                document.getElementById('news-ticker').innerText = ">> " + data.headlines.join(" | ");
+            } catch (e) { console.log("Sync Error"); }
+        }
+        setInterval(sync, 10000); sync();
+    </script>
+</body>
+</html>
