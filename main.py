@@ -27,17 +27,15 @@ def calculate_progress():
             r = requests.get(url).json()
             articles = r.get('articles', [])[:5]
             if articles:
-                headlines = [a['title'] for a in articles]
-                news_score = 0.08 # Boost score based on active news volume
+                headlines = [a.get('title', 'Headline Unavailable') for a in articles]
+                news_score = 0.08 
 
         # C. COMPUTE, ECONOMY, INFRA (60% Weight)
-        # These represent the 2026 scaling laws and gigawatt-scale data center growth
         compute_val = 0.22  # Tracking hardware scaling
         econ_val = 0.18     # Tracking AI-to-GDP contribution
         infra_val = 0.20    # Tracking power grid capacity
 
         # THE SCIENTIFIC COMPOSITE CALCULATION
-        # Starting base of 71.0 (Emerging AGI Level 1)
         base = 71.0
         live_boost = (res_score + news_score + compute_val + econ_val + infra_val) * 10
         total = round(base + live_boost, 3)
@@ -52,9 +50,9 @@ def calculate_progress():
     except Exception as e:
         return {"proximity": 72.4, "headlines": ["Feed Offline"], "error": str(e)}
 
-@app.get("/api/subscribe", methods=["POST"])
+# FIXED LINE: Changed @app.get with methods to @app.post
+@app.post("/api/subscribe")
 async def create_pay_session():
-    # This triggers the $5 Stripe checkout we discussed
     try:
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
@@ -67,8 +65,8 @@ async def create_pay_session():
                 'quantity': 1,
             }],
             mode='payment',
-            success_url='https://' + os.getenv('RAILWAY_PUBLIC_DOMAIN', '') + '/success',
-            cancel_url='https://' + os.getenv('RAILWAY_PUBLIC_DOMAIN', '') + '/',
+            success_url='https://' + os.getenv('RAILWAY_PUBLIC_DOMAIN', 'your-node.up.railway.app') + '/success',
+            cancel_url='https://' + os.getenv('RAILWAY_PUBLIC_DOMAIN', 'your-node.up.railway.app') + '/',
         )
         return {"url": session.url}
     except Exception as e:
@@ -76,10 +74,19 @@ async def create_pay_session():
 
 @app.get("/success", response_class=HTMLResponse)
 def payment_success():
-    return "<h1>Payment Successful</h1><p>Welcome to the Deep Dive. Access Granted.</p>"
+    return """
+    <body style="background: #000; color: #00ff41; font-family: monospace; text-align: center; padding: 50px;">
+        <h1>[ ACCESS GRANTED ]</h1>
+        <p>DEEP DIVE MODULE ACTIVATED FOR ALBUQUERQUE_01</p>
+        <a href="/" style="color: #fff;">RETURN TO DASHBOARD</a>
+    </body>
+    """
 
 @app.get("/", response_class=HTMLResponse)
 def home():
-    with open("index.html", "r") as f:
-        return f.read()
+    try:
+        with open("index.html", "r") as f:
+            return f.read()
+    except:
+        return "<h1>Node Online</h1><p>Index.html missing. Check GitHub files.</p>"
         
