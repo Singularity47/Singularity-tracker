@@ -105,6 +105,11 @@ PREDICTION: At current arXiv velocity, the ABQ Node will hit 75% Proximity by Ap
         const res = await fetch('/api/tracker-logic');
         const data = await res.json();
         
+        // Updates the Energy Grid card
+document.getElementById('energy-val').innerText = data.energy;
+
+// Updates the ABQ Housing card
+document.getElementById('housing-val').innerText = data.housing;
         // Updates the main bar
         document.getElementById('prox-text').innerText = data.proximity + "%";
         document.getElementById('prox-fill').style.width = data.proximity + "%";
